@@ -1,0 +1,23 @@
+{
+    "name": "Incentive",
+    "short_name": "Incentive",
+    "start_url": ".",
+    "display": "minimal-ui",
+    "background_color": "#009688",
+    "theme_color": "#009688",
+    "description": "A new task management application",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/ic_launcher.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

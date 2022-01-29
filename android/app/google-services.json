@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "474887074959",
+    "firebase_url": "https://todo-incentive.firebaseio.com",
+    "project_id": "todo-incentive",
+    "storage_bucket": "todo-incentive.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474887074959:android:98ee26dcde4a9b21a6acfa",
+        "android_client_info": {
+          "package_name": "com.srivats.incentive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkuIDjo0q6-qRwd0FAXKwoYm5tlYa4-NA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474887074959:android:7353652cc7550253a6acfa",
+        "android_client_info": {
+          "package_name": "com.srivats.incentive_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474887074959-aa7loi91lgtcgekmbkh8amsia2pu3m49.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.srivats.incentive_flutter",
+            "certificate_hash": "992a8350e68c4697c546fa9f6838b8e5f24f6875"
+          }
+        },
+        {
+          "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkuIDjo0q6-qRwd0FAXKwoYm5tlYa4-NA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474887074959:android:9b74b2243b86c9c4a6acfa",
+        "android_client_info": {
+          "package_name": "com.srivats.todoincentive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkuIDjo0q6-qRwd0FAXKwoYm5tlYa4-NA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474887074959-j8crdecm62p7v0n39d5airv6pckdsc2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
