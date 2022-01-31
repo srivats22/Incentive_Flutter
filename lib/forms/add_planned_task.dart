@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class AddPlannedTask extends StatefulWidget {
   final String userUid;
@@ -90,28 +92,51 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
                   ),
                 ),
                 SizedBox(height: 5,),
-                ButtonBar(
-                  alignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Cancel"),
-                    ),
-                    ElevatedButton(
-                      onPressed: btnEnabled ? (){
-                        submitForm();
-                      } : null,
-                      child: Text("Save"),
-                    ),
-                  ],
-                ),
+                btnBar(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget btnBar(){
+    if(UniversalPlatform.isIOS){
+      return ButtonBar(
+        alignment: MainAxisAlignment.center,
+        children: [
+          CupertinoButton(
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancel"),
+          ),
+          CupertinoButton.filled(
+            onPressed: (){
+              submitForm();
+            },
+            child: Text("Save"),
+          ),
+        ],
+      );
+    }
+    return ButtonBar(
+      alignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          child: Text("Cancel"),
+        ),
+        ElevatedButton(
+          onPressed: btnEnabled ? (){
+            submitForm();
+          } : null,
+          child: Text("Save"),
+        ),
+      ],
     );
   }
 

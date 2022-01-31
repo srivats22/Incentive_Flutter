@@ -153,74 +153,7 @@ class _AccountState extends State<Account> {
               ),
               Text("Account", style: TextStyle(fontWeight: FontWeight.bold,
                   color: Colors.teal)),
-              Visibility(
-                visible: UniversalPlatform.isIOS,
-                child: CupertinoButton.filled(
-                  onPressed: (){
-                    fAnalytics.logEvent(name: "logout");
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.of(context).pushReplacement(
-                        new MaterialPageRoute(builder: (context) => Login())
-                    );
-                  },
-                  child: Text("Logout"),
-                ),
-              ),
-              Visibility(
-                visible: !UniversalPlatform.isIOS,
-                child: ElevatedButton(
-                  onPressed: (){
-                    fAnalytics.logEvent(name: "logout");
-                    FirebaseAuth.instance.signOut();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.of(context).pushReplacement(
-                        new MaterialPageRoute(builder: (context) => Login())
-                    );
-                  },
-                  child: Text("Logout"),
-                ),
-              ),
-              SizedBox(height: 5,),
-              Visibility(
-                visible: UniversalPlatform.isIOS,
-                child: CupertinoButton(
-                  onPressed: (){
-                    fAnalytics.logEvent(name: "Account deletion triggered");
-                    showModalBottomSheet(
-                        isDismissible: true,
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context){
-                          return deleteAccountConformation();
-                        }
-                    );
-                  },
-                  color: Colors.red,
-                  child: Text("Delete Account"),
-                ),
-              ),
-              Visibility(
-                visible: !UniversalPlatform.isIOS,
-                child: ElevatedButton(
-                  onPressed: (){
-                    fAnalytics.logEvent(name: "Account deletion triggered");
-                    showModalBottomSheet(
-                        isDismissible: true,
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context){
-                          return deleteAccountConformation();
-                        }
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                    onPrimary: Colors.white,
-                  ),
-                  child: Text("Delete Account"),
-                ),
-              ),
+              btn(),
               Divider(
                 indent: 20,
                 endIndent: 20,
@@ -232,7 +165,156 @@ class _AccountState extends State<Account> {
       ),
     );
   }
-  
+
+  Widget btn(){
+    if(UniversalPlatform.isIOS){
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 5,),
+          CupertinoButton(
+            onPressed: (){
+              fAnalytics.logEvent(name: "logout");
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushReplacement(
+                  new MaterialPageRoute(builder: (context) => Login())
+              );
+            },
+            child: Text("Logout"),
+            color: Colors.teal,
+          ),
+          SizedBox(height: 5,),
+          CupertinoButton(
+            onPressed: (){
+              showCupertinoDialog(
+                context: context,
+                builder: (context){
+                  return CupertinoAlertDialog(
+                    title: Text("Delete Account"),
+                    content: Text("This action cannot be undone. You will have to recreate an account if you wish to use Incentive again"),
+                    actions: [
+                      CupertinoDialogAction(
+                        onPressed: (){
+                          fAnalytics.logEvent(name: "Cancelled account deletion");
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancel"),
+                      ),
+                      CupertinoDialogAction(
+                        onPressed: () async{
+                          fAnalytics.logEvent(name: "Account deleted");
+                          // deletes tasks
+                          Future<QuerySnapshot> tasks = FirebaseFirestore.instance
+                              .collection("users").doc(user!.uid).collection("tasks").get();
+                          await tasks.then((value) => {
+                            value.docs.forEach((element) {
+                              FirebaseFirestore.instance
+                                  .collection("users").doc(user!.uid).collection("tasks")
+                                  .doc(element.id).delete();
+                            })
+                          });
+                          // deletes collection
+                          FirebaseFirestore.instance
+                              .collection("users").doc(user!.uid).delete();
+                          // deletes account
+                          FirebaseAuth.instance.currentUser!.delete();
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                          Navigator.of(context).pushReplacement(
+                              new MaterialPageRoute(builder: (context) => Login())
+                          );
+                        },
+                        child: Text("DELETE ACCOUNT", style: TextStyle(color: Colors.red),),
+                      ),
+                    ],
+                  );
+                }
+              );
+            },
+            color: Colors.red,
+            child: Text("Delete Account"),
+          ),
+        ],
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        ElevatedButton(
+          onPressed: (){
+            fAnalytics.logEvent(name: "logout");
+            FirebaseAuth.instance.signOut();
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.of(context).pushReplacement(
+                new MaterialPageRoute(builder: (context) => Login())
+            );
+          },
+          child: Text("Logout"),
+        ),
+        SizedBox(height: 5,),
+        ElevatedButton(
+          onPressed: (){
+            fAnalytics.logEvent(name: "Account deletion triggered");
+            if(UniversalPlatform.isIOS){
+              CupertinoAlertDialog(
+                title: Text("Delete Account"),
+                content: Text("This action cannot be undone. You will have to recreate an account if you wish to use Incentive again"),
+                actions: [
+                  CupertinoButton(
+                    onPressed: (){
+                      fAnalytics.logEvent(name: "Cancelled account deletion");
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Cancel"),
+                  ),
+                  CupertinoButton(
+                    onPressed: () async{
+                      fAnalytics.logEvent(name: "Account deleted");
+                      // deletes tasks
+                      Future<QuerySnapshot> tasks = FirebaseFirestore.instance
+                          .collection("users").doc(user!.uid).collection("tasks").get();
+                      await tasks.then((value) => {
+                        value.docs.forEach((element) {
+                          FirebaseFirestore.instance
+                              .collection("users").doc(user!.uid).collection("tasks")
+                              .doc(element.id).delete();
+                        })
+                      });
+                      // deletes collection
+                      FirebaseFirestore.instance
+                          .collection("users").doc(user!.uid).delete();
+                      // deletes account
+                      FirebaseAuth.instance.currentUser!.delete();
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pushReplacement(
+                          new MaterialPageRoute(builder: (context) => Login())
+                      );
+                    },
+                    child: Text("DELETE Account"),
+                  ),
+                ],
+              );
+            }
+            showModalBottomSheet(
+                isDismissible: true,
+                isScrollControlled: true,
+                context: context,
+                builder: (context){
+                  return deleteAccountConformation();
+                }
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+            onPrimary: Colors.white,
+          ),
+          child: Text("Delete Account"),
+        ),
+      ],
+    );
+  }
+
   Widget deleteAccountConformation(){
     return Container(
       height: MediaQuery.of(context).size.height * .50,

@@ -66,6 +66,7 @@ class _LoginFormState extends State<LoginForm> {
                         placeholder: "Email",
                         keyboardType: TextInputType.emailAddress,
                         restorationId: 'Email',
+                        autocorrect: false,
                       ),
                     ),
                     SizedBox(height: 10,),
@@ -101,38 +102,11 @@ class _LoginFormState extends State<LoginForm> {
                       alignment: Alignment.bottomRight,
                       child: CupertinoButton(
                         onPressed: (){
-                          showDialog(
-                              context: context,
-                              builder: (context){
-                                return AlertDialog(
-                                  alignment: Alignment.center,
-                                  scrollable: true,
-                                  content: Column(
-                                    children: [
-                                      CupertinoTextField(
-                                        controller: email,
-                                        placeholder: "Email",
-                                        keyboardType: TextInputType.emailAddress,
-                                        restorationId: 'Email',
-                                        autocorrect: false,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    CupertinoButton.filled(
-                                      onPressed: (){
-                                        fAuth.sendPasswordResetEmail(email: forgotPwdEmail!.text);
-                                        Navigator.of(context).pushReplacement(
-                                            new MaterialPageRoute(builder: (context) => ForgotPwdSuccess(
-                                                forgotPwdEmail!.text
-                                            ))
-                                        );
-                                      },
-                                      child: Text("Submit"),
-                                    ),
-                                  ],
-                                );
-                              }
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context){
+                              return _bottomSheet();
+                            }
                           );
                         },
                         child: Text("Forgot Password"),
@@ -267,44 +241,10 @@ class _LoginFormState extends State<LoginForm> {
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       onPressed: (){
-                        showDialog(
+                        showModalBottomSheet(
                           context: context,
                           builder: (context){
-                            return AlertDialog(
-                              scrollable: true,
-                              content: Column(
-                                children: [
-                                  TextFormField(
-                                    controller: forgotPwdEmail,
-                                    decoration: InputDecoration(
-                                      labelText: 'Registered Email',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    validator: (input){
-                                      if(input!.isEmpty){
-                                        return 'Email is required';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: (){
-                                    fAuth.sendPasswordResetEmail(email: forgotPwdEmail!.text);
-                                    Navigator.of(context).pushReplacement(
-                                      new MaterialPageRoute(builder: (context) => ForgotPwdSuccess(
-                                        forgotPwdEmail!.text
-                                      ))
-                                    );
-                                  },
-                                  child: Text("Submit")
-                                )
-                              ],
-                            );
+                            return _bottomSheet();
                           }
                         );
                       },
@@ -341,6 +281,84 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomSheet(){
+    return Container(
+      height: MediaQuery.of(context).size.height * .50,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Text("Forgot password?",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+            SizedBox(height: 10,),
+            Text("Complete the form below to get a link to change your password",
+            style: TextStyle(fontSize: 18),),
+            SizedBox(height: 10,),
+            Visibility(
+              visible: UniversalPlatform.isIOS,
+              child: CupertinoTextField(
+                controller: forgotPwdEmail,
+                placeholder: "Email",
+                keyboardType: TextInputType.emailAddress,
+                restorationId: 'Email',
+                autocorrect: false,
+              ),
+            ),
+            Visibility(
+              visible: !UniversalPlatform.isIOS,
+              child: TextFormField(
+                controller: forgotPwdEmail,
+                decoration: InputDecoration(
+                  labelText: 'Registered Email',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                validator: (input){
+                  if(input!.isEmpty){
+                    return 'Email is required';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            SizedBox(height: 10,),
+            Visibility(
+              visible: UniversalPlatform.isIOS,
+              child: CupertinoButton.filled(
+                  onPressed: (){
+                    fAuth.sendPasswordResetEmail(email: forgotPwdEmail!.text)
+                    .whenComplete(() => {
+                      Navigator.of(context).pushReplacement(
+                      new MaterialPageRoute(builder: (context) => ForgotPwdSuccess(
+                      forgotPwdEmail!.text
+                      ))
+                      ),
+                    });
+                  },
+                  child: Text("Submit")
+              ),
+            ),
+            Visibility(
+              visible: !UniversalPlatform.isIOS,
+              child: ElevatedButton(
+                  onPressed: (){
+                    fAuth.sendPasswordResetEmail(email: forgotPwdEmail!.text);
+                    Navigator.of(context).pushReplacement(
+                        new MaterialPageRoute(builder: (context) => ForgotPwdSuccess(
+                            forgotPwdEmail!.text
+                        ))
+                    );
+                  },
+                  child: Text("Submit")
+              ),
+            ),
+          ],
         ),
       ),
     );

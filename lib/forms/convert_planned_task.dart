@@ -1,8 +1,10 @@
 // form for converting a planned task to current task
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incentive_flutter/common.dart';
 import 'package:incentive_flutter/screens/navigation/navigation.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class ConvertPlannedTask extends StatefulWidget {
   final String userUid, taskName, taskDesc, docId;
@@ -15,10 +17,12 @@ class ConvertPlannedTask extends StatefulWidget {
 class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
   TextEditingController? taskName, taskDesc, taskReward;
   final GlobalKey<FormState> convertKey = new GlobalKey<FormState>();
-  bool btnEnabled = false;
+  bool btnEnabled = true;
+  bool isError = false;
   int priority = 0;
   DateTime dt = DateTime.now();
   String? currDate = "";
+  String errorMsg = "Some Fields are empty";
 
   void initialization() {
     var month = dt.month.toString();
@@ -44,7 +48,10 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
     var screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("Convert Task",
+          style: TextStyle(color: Colors.black),),
+        ),
         body: Form(
           key: convertKey,
           onChanged: () {
@@ -59,7 +66,6 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
             padding: EdgeInsets.only(top: 10),
             child: Column(
               children: [
-                Text("Create Task"),
                 SizedBox(
                   height: 5,
                 ),
@@ -191,27 +197,17 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Cancel"),
-                    ),
-                    ElevatedButton(
-                      onPressed: btnEnabled
-                          ? () {
-                              submitForm();
-                            }
-                          : null,
-                      child: Text("Save"),
-                    ),
-                  ],
+                Visibility(
+                  visible: isError,
+                  child: Text(
+                    errorMsg,
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
+                SizedBox(height: 5,),
+                btnBar(),
               ],
             ),
           ),
@@ -220,23 +216,71 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
     );
   }
 
+  Widget btnBar(){
+    if(UniversalPlatform.isIOS){
+      return ButtonBar(
+        alignment: MainAxisAlignment.center,
+        children: [
+          CupertinoButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Cancel"),
+          ),
+          CupertinoButton.filled(
+            onPressed: () {
+              submitForm();
+            },
+            child: Text("Save"),
+          ),
+        ],
+      );
+    }
+    return ButtonBar(
+      alignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text("Cancel"),
+        ),
+        ElevatedButton(
+          onPressed: btnEnabled
+              ? () {
+            submitForm();
+          }
+              : null,
+          child: Text("Save"),
+        ),
+      ],
+    );
+  }
+
   void submitForm() {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc("${widget.userUid}")
-        .collection("tasks")
-        .add({
-      "priority": priority,
-      "taskName": taskName!.text,
-      "taskDescription": taskDesc!.text,
-      "taskReward": taskReward!.text,
-      "due": currDate,
-    });
-    fStore.collection("users")
-        .doc("${widget.userUid}")
-        .collection("planned")
-        .doc("${widget.docId}").delete();
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => Navigation()));
+    if(taskName!.text.isEmpty || taskReward!.text.isEmpty){
+      setState(() {
+        isError = true;
+      });
+    }
+    else{
+      FirebaseFirestore.instance
+          .collection("users")
+          .doc("${widget.userUid}")
+          .collection("tasks")
+          .add({
+        "priority": priority,
+        "taskName": taskName!.text,
+        "taskDescription": taskDesc!.text,
+        "taskReward": taskReward!.text,
+        "due": currDate,
+      });
+      fStore.collection("users")
+          .doc("${widget.userUid}")
+          .collection("planned")
+          .doc("${widget.docId}").delete();
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => Navigation()));
+    }
   }
 }

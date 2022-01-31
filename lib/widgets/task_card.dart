@@ -110,7 +110,7 @@ class _TaskCardState extends State<TaskCard> {
         context: context,
         builder: (context){
           return Container(
-            height: MediaQuery.of(context).size.height * .50,
+            height: MediaQuery.of(context).size.height * .30,
             child: ListView(
               padding: EdgeInsets.all(20),
               shrinkWrap: true,

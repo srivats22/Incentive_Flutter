@@ -12,7 +12,6 @@ User? currUser = fAuth.currentUser;
 final isWebMobile =
     kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
 
-
 // links
 String appUrl = "https://play.google.com/store/apps/details?id=com.srivats.todoincentive";
 String privacyLink =

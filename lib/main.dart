@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Incentive',
-      themeMode: ThemeMode.system,
       theme: _appData().copyWith(
         pageTransitionsTheme: PageTransitionsTheme(
           builders: {
@@ -53,12 +52,11 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       primarySwatch: Colors.teal,
       textTheme: GoogleFonts.montserratTextTheme(),
-      // appBarTheme: AppBarTheme(
-      //   elevation: 0,
-      //   backgroundColor: Colors.white,
-      //   titleTextStyle: TextStyle(color: Colors.black),
-      //   iconTheme: IconThemeData(color: Colors.black),
-      // ),
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       scaffoldBackgroundColor: Colors.white,
     );
   }

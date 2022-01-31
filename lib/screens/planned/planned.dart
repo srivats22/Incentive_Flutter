@@ -110,7 +110,7 @@ class _PlannedState extends State<Planned> {
         context: context,
         builder: (context){
           return Container(
-            height: MediaQuery.of(context).size.height * .50,
+            height: MediaQuery.of(context).size.height * .30,
             child: ListView(
               padding: EdgeInsets.all(20),
               shrinkWrap: true,
@@ -121,7 +121,7 @@ class _PlannedState extends State<Planned> {
                     onPressed: (){
                       Navigator.of(context).pop();
                       Navigator.of(context)
-                          .pushReplacement(
+                          .push(
                           new MaterialPageRoute(
                               builder: (context) =>
                                   ConvertPlannedTask(
