@@ -5,6 +5,7 @@ import 'package:incentive_flutter/common.dart';
 import 'package:incentive_flutter/screens/forgot_pwd_success.dart';
 import 'package:incentive_flutter/screens/navigation/navigation.dart';
 import 'package:incentive_flutter/screens/register.dart';
+import 'package:incentive_flutter/widgets/custom_input.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class LoginForm extends StatefulWidget {
@@ -34,120 +35,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    if(UniversalPlatform.isIOS){
-      return SafeArea(
-        child: Scaffold(
-          body: isLoading ? Center(
-            child: CupertinoActivityIndicator(),
-          ) : Center(
-            child: Form(
-              key: loginKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              onChanged: (){
-                if(loginKey.currentState!.validate()){
-                  setState(() {
-                    isBtnEnabled = true;
-                  });
-                }
-                else{
-                  isBtnEnabled = false;
-                }
-              },
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text("Incentive",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),),
-                    SizedBox(height: 10,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .75,
-                      child: CupertinoTextField(
-                        controller: email,
-                        placeholder: "Email",
-                        keyboardType: TextInputType.emailAddress,
-                        restorationId: 'Email',
-                        autocorrect: false,
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .75,
-                      child: CupertinoTextField(
-                        controller: pwd,
-                        placeholder: "Password",
-                        restorationId: 'Password',
-                        obscureText: isObscured,
-                        suffix: isObscured ? IconButton(
-                          onPressed: (){
-                            if(isObscured){
-                              setState(() {
-                                isObscured = false;
-                              });
-                            }
-                          },
-                          icon: Icon(CupertinoIcons.eye_slash_fill),
-                        ) : IconButton(
-                          onPressed: (){
-                            if(isObscured == false){
-                              setState(() {
-                                isObscured = true;
-                              });
-                            }
-                          },
-                          icon: Icon(CupertinoIcons.eye),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: CupertinoButton(
-                        onPressed: (){
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context){
-                              return _bottomSheet();
-                            }
-                          );
-                        },
-                        child: Text("Forgot Password"),
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Text(isErrorMsg ? errorMsg
-                        : "", style: TextStyle(color: Colors.red,),
-                    textAlign: TextAlign.center,),
-                    SizedBox(height: 10,),
-                    CupertinoButton.filled(
-                      onPressed: (){
-                        fAnalytics.logLogin();
-                        setState(() {
-                          isLoading = true;
-                        });
-                        loginFunction();
-                      },
-                      child: Text("Login"),
-                    ),
-                    Divider(
-                      indent: 20,
-                      endIndent: 20,
-                    ),
-                    CupertinoButton(
-                      onPressed: (){
-                        Navigator.of(context)
-                            .push(new MaterialPageRoute(
-                            builder: (context) => Register()));
-                      },
-                      child: Text("New? Register"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    // Android
     return SafeArea(
       child: Scaffold(
         body: isLoading ? Center(
@@ -155,17 +42,6 @@ class _LoginFormState extends State<LoginForm> {
         ) : Center(
           child: Form(
             key: loginKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (){
-              if(loginKey.currentState!.validate()){
-                setState(() {
-                  isBtnEnabled = true;
-                });
-              }
-              else{
-                isBtnEnabled = false;
-              }
-            },
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -173,79 +49,24 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(height: 10,),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .75,
-                    child: TextFormField(
-                      controller: email,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      validator: (input){
-                        if(input!.isEmpty){
-                          return 'Email is required';
-                        }
-                        return null;
-                      },
-                    ),
+                    child: CustomInput(email!, "Email", "", "", false,
+                      TextInputType.emailAddress, false, false),
                   ),
                   SizedBox(height: 10,),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .75,
-                    child: TextFormField(
-                      controller: pwd,
-                      decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          suffixIcon: isObscured ? IconButton(
-                            onPressed: (){
-                              if(isObscured){
-                                setState(() {
-                                  isObscured = false;
-                                });
-                              }
-                            },
-                            icon: Icon(Icons.visibility),
-                          ) : IconButton(
-                            onPressed: (){
-                              if(isObscured == false){
-                                setState(() {
-                                  isObscured = true;
-                                });
-                              }
-                            },
-                            icon: Icon(Icons.visibility_off),
-                          )
-                      ),
-                      validator: (input){
-                        if(input!.isEmpty){
-                          return 'Password is required';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (input){
-                        if(loginKey.currentState!.validate()){
-                          fAnalytics.logLogin();
-                          setState(() {
-                            isLoading = true;
-                          });
-                          loginFunction();
-                        }
-                      },
-                      obscureText: isObscured,
-                    ),
+                    child: CustomInput(pwd!, "Password", "", "", true,
+                        TextInputType.text, isObscured, false),
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       onPressed: (){
                         showModalBottomSheet(
-                          context: context,
-                          builder: (context){
-                            return _bottomSheet();
-                          }
+                            context: context,
+                            builder: (context){
+                              return _bottomSheet();
+                            }
                         );
                       },
                       child: Text("Forgot Password"),
@@ -255,15 +76,32 @@ class _LoginFormState extends State<LoginForm> {
                   Text(isErrorMsg ? errorMsg
                       : "", style: TextStyle(color: Colors.red),),
                   SizedBox(height: 10,),
-                  ElevatedButton(
-                    onPressed: isBtnEnabled ? (){
-                      fAnalytics.logLogin();
-                      setState(() {
-                        isLoading = true;
-                      });
-                      loginFunction();
-                    } : null,
-                    child: Text("Login"),
+                  Visibility(
+                    visible: UniversalPlatform.isIOS,
+                    child: CupertinoButton(
+                      onPressed: (){
+                        fAnalytics.logLogin();
+                        setState(() {
+                          isLoading = true;
+                        });
+                        loginFunction();
+                      },
+                      child: Text("Login"),
+                      color: Colors.teal,
+                    ),
+                  ),
+                  Visibility(
+                    visible: !UniversalPlatform.isIOS,
+                    child: ElevatedButton(
+                      onPressed: (){
+                        fAnalytics.logLogin();
+                        setState(() {
+                          isLoading = true;
+                        });
+                        loginFunction();
+                      },
+                      child: Text("Login"),
+                    ),
                   ),
                   Divider(
                     indent: 20,
@@ -307,6 +145,7 @@ class _LoginFormState extends State<LoginForm> {
                 keyboardType: TextInputType.emailAddress,
                 restorationId: 'Email',
                 autocorrect: false,
+                autofillHints: [AutofillHints.email],
               ),
             ),
             Visibility(
@@ -365,36 +204,33 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void loginFunction() async{
-    if(loginKey.currentState!.validate()){
-      loginKey.currentState!.save();
-      try{
-        await fAuth.signInWithEmailAndPassword(
-            email: email!.text, password: pwd!.text);
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        Navigator.of(context).pushReplacement(
-            new MaterialPageRoute(builder: (context) => Navigation()));
+    try{
+      await fAuth.signInWithEmailAndPassword(
+          email: email!.text, password: pwd!.text);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(builder: (context) => Navigation()));
+    }
+    on FirebaseAuthException catch(e){
+      if(e.code.contains("user-not-found")){
+        fAnalytics.logEvent(name: "user-not-found");
+        // fAnalytics.logEvent(name: "Account not found");
+        setState(() {
+          isLoading = false;
+          isErrorMsg = true;
+          isBtnEnabled = false;
+          errorMsg = "It looks like you don't have an account";
+        });
       }
-      on FirebaseAuthException catch(e){
-        if(e.code.contains("user-not-found")){
-          fAnalytics.logEvent(name: "user-not-found");
-          // fAnalytics.logEvent(name: "Account not found");
-          setState(() {
-            isLoading = false;
-            isErrorMsg = true;
-            isBtnEnabled = false;
-            errorMsg = "It looks like you don't have an account";
-          });
-        }
-        if(e.code.contains("wrong-password")){
-          fAnalytics.logEvent(name: "wrong-password");
-          setState(() {
-            isLoading = false;
-            isErrorMsg = true;
-            isBtnEnabled = false;
-            errorMsg = "Your password is incorrect. Try again or reset your password";
-          });
-          print("Your Password not correct");
-        }
+      if(e.code.contains("wrong-password")){
+        fAnalytics.logEvent(name: "wrong-password");
+        setState(() {
+          isLoading = false;
+          isErrorMsg = true;
+          isBtnEnabled = false;
+          errorMsg = "Your password is incorrect. Try again or reset your password";
+        });
+        print("Your Password not correct");
       }
     }
   }

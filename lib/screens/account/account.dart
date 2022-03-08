@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,6 +43,7 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: Scaffold(
         appBar: UniversalPlatform.isAndroid || isWebMobile
@@ -63,6 +65,47 @@ class _AccountState extends State<Account> {
               ),),
               SelectableText("${user!.email}",
               style: TextStyle(fontSize: 18),),
+              Divider(
+                indent: 20,
+                endIndent: 20,
+              ),
+              Visibility(
+                visible: !UniversalPlatform.isIOS,
+                child: ListTile(
+                  leading: isDarkModeOn ? Icon(Icons.dark_mode) : Icon(Icons.light_mode),
+                  title: Text("Change Theme"),
+                  subtitle: Text(isDarkModeOn ? "Theme: Dark Mode" :
+                  "Theme: Light Mode"),
+                  trailing: Switch(
+                    value: isDarkModeOn,
+                    onChanged: (value){
+                      setState(() {
+                        isDarkModeOn = value;
+                        EasyDynamicTheme.of(context).changeTheme();
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: UniversalPlatform.isIOS,
+                child: ListTile(
+                  leading: isDarkModeOn ? Icon(CupertinoIcons.moon_fill) :
+                  Icon(CupertinoIcons.sun_max_fill),
+                  title: Text("Change Theme"),
+                  subtitle: Text(isDarkModeOn ? "Theme: Dark Mode" :
+                  "Theme: Light Mode"),
+                  trailing: CupertinoSwitch(
+                    value: isDarkModeOn,
+                    onChanged: (value){
+                      setState(() {
+                        isDarkModeOn = value;
+                        EasyDynamicTheme.of(context).changeTheme();
+                      });
+                    },
+                  ),
+                ),
+              ),
               Divider(
                 indent: 20,
                 endIndent: 20,
@@ -93,11 +136,10 @@ class _AccountState extends State<Account> {
                     children: [
                       Text(
                         '''
-                        Incentive is a new To-Do app. Where for each app you can
-                        write a reward you wish to enjoy after completing that task.
+                        Incentive is a new To-Do app. Where for each app you can write a reward you wish to enjoy after completing that task.
                         '''
                       )
-                    ]
+                    ],
                   );
                 },
                 leading: Icon(Icons.info),
@@ -240,6 +282,7 @@ class _AccountState extends State<Account> {
     }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ElevatedButton(
           onPressed: (){
@@ -256,53 +299,60 @@ class _AccountState extends State<Account> {
         ElevatedButton(
           onPressed: (){
             fAnalytics.logEvent(name: "Account deletion triggered");
-            if(UniversalPlatform.isIOS){
-              CupertinoAlertDialog(
-                title: Text("Delete Account"),
-                content: Text("This action cannot be undone. You will have to recreate an account if you wish to use Incentive again"),
-                actions: [
-                  CupertinoButton(
-                    onPressed: (){
-                      fAnalytics.logEvent(name: "Cancelled account deletion");
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Cancel"),
-                  ),
-                  CupertinoButton(
-                    onPressed: () async{
-                      fAnalytics.logEvent(name: "Account deleted");
-                      // deletes tasks
-                      Future<QuerySnapshot> tasks = FirebaseFirestore.instance
-                          .collection("users").doc(user!.uid).collection("tasks").get();
-                      await tasks.then((value) => {
-                        value.docs.forEach((element) {
-                          FirebaseFirestore.instance
-                              .collection("users").doc(user!.uid).collection("tasks")
-                              .doc(element.id).delete();
-                        })
-                      });
-                      // deletes collection
-                      FirebaseFirestore.instance
-                          .collection("users").doc(user!.uid).delete();
-                      // deletes account
-                      FirebaseAuth.instance.currentUser!.delete();
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                      Navigator.of(context).pushReplacement(
-                          new MaterialPageRoute(builder: (context) => Login())
-                      );
-                    },
-                    child: Text("DELETE Account"),
-                  ),
-                ],
-              );
-            }
-            showModalBottomSheet(
-                isDismissible: true,
-                isScrollControlled: true,
-                context: context,
-                builder: (context){
-                  return deleteAccountConformation();
-                }
+            showDialog(
+              context: context,
+              builder: (context){
+                return AlertDialog(
+                  title: Text("Delete Account"),
+                  content: Text("This action cannot be undone. You will have to recreate an account if you wish to use Incentive again"),
+                  actions: [
+                    TextButton(
+                      onPressed: (){
+                        fAnalytics.logEvent(name: "Cancelled account deletion");
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancel"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async{
+                        fAnalytics.logEvent(name: "Account deleted");
+                        // deletes tasks
+                        Future<QuerySnapshot> tasks = FirebaseFirestore.instance
+                            .collection("users").doc(user!.uid).collection("tasks").get();
+                        Future<QuerySnapshot> plannedTasks = FirebaseFirestore.instance
+                            .collection("users").doc(user!.uid).collection("planned").get();
+                        await tasks.then((value) => {
+                          value.docs.forEach((element) {
+                            FirebaseFirestore.instance
+                                .collection("users").doc(user!.uid).collection("tasks")
+                                .doc(element.id).delete();
+                          })
+                        });
+                        await plannedTasks.then((value) => {
+                          value.docs.forEach((element) {
+                            FirebaseFirestore.instance
+                                .collection("users").doc(user!.uid).collection("planned")
+                                .doc(element.id).delete();
+                          })
+                        });
+                        // deletes collection
+                        FirebaseFirestore.instance
+                            .collection("users").doc(user!.uid).delete();
+                        // deletes account
+                        FirebaseAuth.instance.currentUser!.delete();
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Navigator.of(context).pushReplacement(
+                            new MaterialPageRoute(builder: (context) => Login())
+                        );
+                      },
+                      child: Text("DELETE"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red
+                      ),
+                    ),
+                  ],
+                );
+              }
             );
           },
           style: ElevatedButton.styleFrom(

@@ -52,44 +52,12 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
                 SizedBox(height: 5,),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: TextFormField(
-                    controller: taskName,
-                    validator: (input){
-                      if(input!.isEmpty){
-                        return "Task Name is required";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Task Name",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
+                  child: taskNameInput(),
                 ),
                 SizedBox(height: 10,),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: TextFormField(
-                    controller: taskDesc,
-                    validator: (input){
-                      if(input!.isEmpty){
-                        return "Task Description is required";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Task Description",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    minLines: 1,
-                    maxLines: 5,
-                    maxLength: 256,
-                    keyboardType: TextInputType.multiline,
-                  ),
+                  child: taskDescriptionInput(),
                 ),
                 SizedBox(height: 5,),
                 btnBar(),
@@ -98,6 +66,68 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget taskNameInput(){
+    if(UniversalPlatform.isIOS){
+      return CupertinoTextField(
+        controller: taskName,
+        placeholder: "Task Name",
+        textCapitalization: TextCapitalization.sentences,
+      );
+    }
+    return TextFormField(
+      controller: taskName,
+      validator: (input){
+        if(input!.isEmpty){
+          return "Task Name is required";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: "Task Name",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      textCapitalization: TextCapitalization.sentences,
+      autocorrect: true,
+    );
+  }
+
+  Widget taskDescriptionInput(){
+    if(UniversalPlatform.isIOS){
+      return CupertinoTextField(
+        controller: taskDesc,
+        placeholder: "Task description",
+        minLines: 1,
+        maxLines: 5,
+        maxLength: 256,
+        textCapitalization: TextCapitalization.sentences,
+        keyboardType: TextInputType.multiline,
+      );
+    }
+    return TextFormField(
+      controller: taskDesc,
+      validator: (input){
+        if(input!.isEmpty){
+          return "Task Description is required";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: "Task Description",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      minLines: 1,
+      maxLines: 5,
+      maxLength: 256,
+      keyboardType: TextInputType.multiline,
+      textCapitalization: TextCapitalization.sentences,
+      autocorrect: true,
     );
   }
 
