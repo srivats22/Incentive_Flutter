@@ -49,8 +49,7 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Convert Task",
-          style: TextStyle(color: Colors.black),),
+          title: Text("Convert Task",),
         ),
         body: Form(
           key: convertKey,
@@ -66,71 +65,7 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
             padding: EdgeInsets.only(top: 10),
             child: Column(
               children: [
-                SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  width: screenWidth * .75,
-                  child: TextFormField(
-                    controller: taskName,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Task Name is required";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Task Name",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: screenWidth * .75,
-                  child: TextFormField(
-                    controller: taskDesc,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return "Task Description is required";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Task Description",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    minLines: 1,
-                    maxLines: 5,
-                    maxLength: 256,
-                    keyboardType: TextInputType.multiline,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: screenWidth * .75,
-                  child: TextFormField(
-                    controller: taskReward,
-                    decoration: InputDecoration(
-                      labelText: "Task Reward",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    minLines: 1,
-                    maxLines: 5,
-                    maxLength: 256,
-                    keyboardType: TextInputType.multiline,
-                  ),
-                ),
+                _convertForm(screenWidth),
                 SizedBox(
                   height: 5,
                 ),
@@ -216,6 +151,128 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
     );
   }
 
+  Widget _convertForm(double screenWidth){
+    if(UniversalPlatform.isIOS){
+      return Column(
+        children: [
+          SizedBox(
+            height: 5,
+          ),
+          SizedBox(
+            width: screenWidth * .75,
+            child: CupertinoTextField(
+              controller: taskName,
+              placeholder: "Task Name",
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: screenWidth * .75,
+            child: CupertinoTextField(
+              controller: taskDesc,
+              placeholder: "Task Description",
+              minLines: 1,
+              maxLines: 5,
+              maxLength: 256,
+              keyboardType: TextInputType.multiline,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: screenWidth * .75,
+            child: CupertinoTextField(
+              controller: taskReward,
+              placeholder: "Task Reward",
+              minLines: 1,
+              maxLines: 5,
+              maxLength: 256,
+              keyboardType: TextInputType.multiline,
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        SizedBox(
+          height: 5,
+        ),
+        SizedBox(
+          width: screenWidth * .75,
+          child: TextFormField(
+            controller: taskName,
+            validator: (input) {
+              if (input!.isEmpty) {
+                return "Task Name is required";
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: "Task Name",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            textCapitalization: TextCapitalization.sentences,
+            autocorrect: true,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: screenWidth * .75,
+          child: TextFormField(
+            controller: taskDesc,
+            validator: (input) {
+              if (input!.isEmpty) {
+                return "Task Description is required";
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: "Task Description",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            minLines: 1,
+            maxLines: 5,
+            maxLength: 256,
+            keyboardType: TextInputType.multiline,
+            textCapitalization: TextCapitalization.sentences,
+            autocorrect: true,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: screenWidth * .75,
+          child: TextFormField(
+            controller: taskReward,
+            decoration: InputDecoration(
+              labelText: "Task Reward",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            minLines: 1,
+            maxLines: 5,
+            maxLength: 256,
+            keyboardType: TextInputType.multiline,
+            textCapitalization: TextCapitalization.sentences,
+            autocorrect: true,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget btnBar(){
     if(UniversalPlatform.isIOS){
       return ButtonBar(
@@ -258,7 +315,7 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
   }
 
   void submitForm() {
-    if(taskName!.text.isEmpty || taskReward!.text.isEmpty){
+    if(taskName!.text.isEmpty || taskDesc!.text.isEmpty){
       setState(() {
         isError = true;
       });

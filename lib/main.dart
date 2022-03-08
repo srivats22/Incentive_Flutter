@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:incentive_flutter/firebase_options.dart';
 import 'package:incentive_flutter/screens/login/login.dart';
 import 'package:incentive_flutter/screens/navigation/navigation.dart';
+import 'package:incentive_flutter/theme.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -16,7 +18,11 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setPathUrlStrategy();
-  runApp(MyApp());
+  runApp(
+    EasyDynamicThemeWidget(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,34 +36,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FirebaseAnalytics analytics = FirebaseAnalytics();
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Incentive',
-      theme: _appData().copyWith(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            for (var type in TargetPlatform.values)
-              type: sharedAxisTransition,
-          },
-        ),
-      ),
+      darkTheme: darkTheme,
+      theme: isDarkModeOn ? darkTheme : lightTheme,
+      themeMode: EasyDynamicTheme.of(context).themeMode,
       home: startingPage(),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics)
       ],
-    );
-  }
-
-  ThemeData _appData(){
-    return ThemeData(
-      primarySwatch: Colors.teal,
-      textTheme: GoogleFonts.montserratTextTheme(),
-      appBarTheme: AppBarTheme(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      scaffoldBackgroundColor: Colors.white,
     );
   }
 

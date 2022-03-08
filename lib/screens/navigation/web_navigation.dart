@@ -25,7 +25,6 @@ class _WebNavigationState extends State<WebNavigation> {
         appBar: AppBar(
           title: Text(
             "Incentive",
-            style: TextStyle(color: Colors.white),
           ),
           centerTitle: false,
         ),
@@ -68,7 +67,6 @@ class _WebNavigationState extends State<WebNavigation> {
                 )
               ],
             ),
-            VerticalDivider(),
             Expanded(
               child: Center(
                 child: pages.elementAt(currentPage),

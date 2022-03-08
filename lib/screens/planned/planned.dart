@@ -34,6 +34,11 @@ class _PlannedState extends State<Planned> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
+    TextStyle? _title =
+    Theme.of(context).textTheme.headline3?.copyWith(color: Colors.black);
+    TextStyle? _body =
+    Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black);
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder(
@@ -68,10 +73,11 @@ class _PlannedState extends State<Planned> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(data['taskName'], style: TextStyle(
-                              fontWeight: FontWeight.bold,fontSize: 16),),
+                          Text(data['taskName'],
+                          style: _title,),
                           SizedBox(height: 5,),
-                          Text(data['taskDescription']),
+                          Text(data['taskDescription'],
+                          style: _body,),
                           Align(
                             alignment: Alignment.bottomRight,
                             child: IconButton(
@@ -79,6 +85,7 @@ class _PlannedState extends State<Planned> {
                                 sheet(data['taskName'], data['taskDescription'], document.id);
                               },
                               icon: Icon(Icons.expand_more),
+                              color: isDarkModeOn ? Colors.black : Colors.black,
                             ),
                           ),
                         ],
@@ -109,8 +116,9 @@ class _PlannedState extends State<Planned> {
     showModalBottomSheet(
         context: context,
         builder: (context){
+          bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
           return Container(
-            height: MediaQuery.of(context).size.height * .30,
+            height: MediaQuery.of(context).size.height * .40,
             child: ListView(
               padding: EdgeInsets.all(20),
               shrinkWrap: true,
@@ -130,14 +138,18 @@ class _PlannedState extends State<Planned> {
                                       id)));
                     },
                     icon: Icon(Icons.edit),
-                    color: Colors.black,
+                    color: isDarkModeOn ? Colors.white : Colors.black,
                   ),
                 ),
-                Text("Task Title", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(taskName),
+                Text("Task Title",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                SizedBox(height: 5,),
+                Text(taskName, style: TextStyle(fontSize: 16),),
                 Divider(indent: 10, endIndent: 10,),
-                Text("Task Description", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(taskDesc),
+                Text("Task Description",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                SizedBox(height: 5,),
+                Text(taskDesc, style: TextStyle(fontSize: 16),),
                 Divider(indent: 10, endIndent: 10,),
                 Visibility(
                   visible: UniversalPlatform.isIOS,

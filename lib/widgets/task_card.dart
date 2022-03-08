@@ -81,16 +81,26 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   Widget content(BuildContext context){
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
+    TextStyle? _title =
+    Theme.of(context).textTheme.headline3?.copyWith(color: Colors.black);
+    TextStyle? _body =
+    Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black);
+    TextStyle? _subtitle =
+    Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.black);
     return Padding(
       padding: EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(widget.taskName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+          Text(widget.taskName,
+              style: _title,),
           SizedBox(height: 5,),
-          Text(widget.taskDesc),
+          Text(widget.taskDesc,
+          style: _body,),
           SizedBox(height: 5,),
-          Text("Due Date: ${widget.due}", style: TextStyle(fontWeight: FontWeight.bold),),
+          Text("Due Date: ${widget.due}",
+              style: _subtitle,),
           Align(
             alignment: Alignment.bottomRight,
             child: IconButton(
@@ -98,6 +108,7 @@ class _TaskCardState extends State<TaskCard> {
                 _bottomSheet(context);
               },
               icon: Icon(Icons.expand_more),
+              color: isDarkModeOn ? Colors.black : Colors.black,
             ),
           ),
         ],
@@ -106,11 +117,12 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   void _bottomSheet(BuildContext context){
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
         context: context,
         builder: (context){
           return Container(
-            height: MediaQuery.of(context).size.height * .30,
+            height: MediaQuery.of(context).size.height * .40,
             child: ListView(
               padding: EdgeInsets.all(20),
               shrinkWrap: true,
@@ -128,23 +140,29 @@ class _TaskCardState extends State<TaskCard> {
                                     widget.taskReward, widget.priority, false, false)));
                       },
                       icon: Icon(Icons.edit),
-                      color: Colors.black,
+                      color: isDarkModeOn ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
-                Text("Task Title", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(widget.taskName),
+                Text("Task Title",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                SizedBox(height: 5,),
+                Text(widget.taskName, style: TextStyle(fontSize: 16),),
                 Divider(indent: 10, endIndent: 10,),
-                Text("Task Description", style: TextStyle(fontWeight: FontWeight.bold),),
-                Text(widget.taskDesc),
+                Text("Task Description",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                SizedBox(height: 5,),
+                Text(widget.taskDesc, style: TextStyle(fontSize: 16),),
                 Divider(indent: 10, endIndent: 10,),
                 Visibility(
                   visible: widget.taskReward != "",
-                  child: Text("Task Reward", style: TextStyle(fontWeight: FontWeight.bold),),
+                  child: Text("Task Reward",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                 ),
+                SizedBox(height: 5,),
                 Visibility(
                   visible: widget.taskReward != "",
-                  child: Text(widget.taskReward,),
+                  child: Text(widget.taskReward, style: TextStyle(fontSize: 16),),
                 ),
                 Visibility(
                   visible: UniversalPlatform.isIOS,
