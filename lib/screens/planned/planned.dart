@@ -36,7 +36,7 @@ class _PlannedState extends State<Planned> {
   Widget build(BuildContext context) {
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     TextStyle? _title =
-    Theme.of(context).textTheme.headline3?.copyWith(color: Colors.black);
+    Theme.of(context).textTheme.headline6?.copyWith(color: Colors.black);
     TextStyle? _body =
     Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black);
     return SafeArea(

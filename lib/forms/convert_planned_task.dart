@@ -6,6 +6,8 @@ import 'package:incentive_flutter/common.dart';
 import 'package:incentive_flutter/screens/navigation/navigation.dart';
 import 'package:universal_platform/universal_platform.dart';
 
+import '../widgets/custom_input.dart';
+
 class ConvertPlannedTask extends StatefulWidget {
   final String userUid, taskName, taskDesc, docId;
   ConvertPlannedTask(this.userUid, this.taskName, this.taskDesc, this.docId);
@@ -152,50 +154,6 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
   }
 
   Widget _convertForm(double screenWidth){
-    if(UniversalPlatform.isIOS){
-      return Column(
-        children: [
-          SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            width: screenWidth * .75,
-            child: CupertinoTextField(
-              controller: taskName,
-              placeholder: "Task Name",
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: screenWidth * .75,
-            child: CupertinoTextField(
-              controller: taskDesc,
-              placeholder: "Task Description",
-              minLines: 1,
-              maxLines: 5,
-              maxLength: 256,
-              keyboardType: TextInputType.multiline,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: screenWidth * .75,
-            child: CupertinoTextField(
-              controller: taskReward,
-              placeholder: "Task Reward",
-              minLines: 1,
-              maxLines: 5,
-              maxLength: 256,
-              keyboardType: TextInputType.multiline,
-            ),
-          ),
-        ],
-      );
-    }
     return Column(
       children: [
         SizedBox(
@@ -203,71 +161,24 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
         ),
         SizedBox(
           width: screenWidth * .75,
-          child: TextFormField(
-            controller: taskName,
-            validator: (input) {
-              if (input!.isEmpty) {
-                return "Task Name is required";
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              labelText: "Task Name",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            textCapitalization: TextCapitalization.sentences,
-            autocorrect: true,
-          ),
+          child: CustomInput(taskName!, "Task Name", "", "", false,
+              TextInputType.text, false, false),
         ),
         SizedBox(
           height: 10,
         ),
         SizedBox(
           width: screenWidth * .75,
-          child: TextFormField(
-            controller: taskDesc,
-            validator: (input) {
-              if (input!.isEmpty) {
-                return "Task Description is required";
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              labelText: "Task Description",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            minLines: 1,
-            maxLines: 5,
-            maxLength: 256,
-            keyboardType: TextInputType.multiline,
-            textCapitalization: TextCapitalization.sentences,
-            autocorrect: true,
-          ),
+          child: CustomInput(taskDesc!, "Task Name", "", "", false,
+              TextInputType.text, false, false),
         ),
         SizedBox(
           height: 10,
         ),
         SizedBox(
           width: screenWidth * .75,
-          child: TextFormField(
-            controller: taskReward,
-            decoration: InputDecoration(
-              labelText: "Task Reward",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            minLines: 1,
-            maxLines: 5,
-            maxLength: 256,
-            keyboardType: TextInputType.multiline,
-            textCapitalization: TextCapitalization.sentences,
-            autocorrect: true,
-          ),
+          child: CustomInput(taskReward!, "Task Name", "", "", false,
+              TextInputType.text, false, false),
         ),
       ],
     );

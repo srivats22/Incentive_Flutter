@@ -38,9 +38,8 @@ class _MobileNavState extends State<MobileNav> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
             elevation: 0,
-            title: const Text('Incentive', style: TextStyle(color: Colors.black),),
+            title: const Text('Incentive'),
             actions: <Widget>[
               GestureDetector(
                 onTap: (){
@@ -72,67 +71,7 @@ class _MobileNavState extends State<MobileNav> {
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 5),
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 5,
-                  runSpacing: 5,
-                  children: [
-                    ChoiceChip(
-                      onSelected: (bool value){
-                        if(value){
-                          setState(() {
-                            _selectedIndex = 0;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            _selectedIndex = 0;
-                          });
-                        }
-                      },
-                      selectedColor: Color.fromRGBO(229, 252, 246, 1),
-                      selected: _selectedIndex == 0,
-                      label: Text("Tasks", style: GoogleFonts.montserrat(
-                          color: Colors.black),),
-                    ),
-                    ChoiceChip(
-                      onSelected: (bool value){
-                        if(value){
-                          setState(() {
-                            _selectedIndex = 1;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            _selectedIndex = 0;
-                          });
-                        }
-                      },
-                      selectedColor: Color.fromRGBO(229, 252, 246, 1),
-                      selected: _selectedIndex == 1,
-                      label: Text("Pending", style: GoogleFonts.montserrat(
-                          color: Colors.black)),
-                    ),
-                    ChoiceChip(
-                      onSelected: (bool value){
-                        if(value){
-                          setState(() {
-                            _selectedIndex = 2;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            _selectedIndex = 0;
-                          });
-                        }
-                      },
-                      selectedColor: Color.fromRGBO(229, 252, 246, 1),
-                      selected: _selectedIndex == 2,
-                      label: Text("Planned", style: GoogleFonts.montserrat(
-                          color: Colors.black)),
-                    ),
-                  ],
-                ),
+                child: chips(),
               ),
               Visibility(
                 visible: _selectedIndex == 0,
@@ -158,6 +97,134 @@ class _MobileNavState extends State<MobileNav> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget chips(){
+    bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
+    if(isDarkModeOn){
+      return Wrap(
+        alignment: WrapAlignment.start,
+        spacing: 5,
+        runSpacing: 5,
+        children: [
+          ChoiceChip(
+            onSelected: (bool value){
+              if(value){
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              }
+              else{
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              }
+            },
+            selectedColor: Color.fromRGBO(229, 252, 246, 1),
+            selected: _selectedIndex == 0,
+            label: Text("Tasks", style: GoogleFonts.montserrat(
+                color: _selectedIndex == 0 ? Colors.black : Colors.white),),
+          ),
+          ChoiceChip(
+            onSelected: (bool value){
+              if(value){
+                setState(() {
+                  _selectedIndex = 1;
+                });
+              }
+              else{
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              }
+            },
+            selectedColor: Color.fromRGBO(229, 252, 246, 1),
+            selected: _selectedIndex == 1,
+            label: Text("Pending", style: GoogleFonts.montserrat(
+                color: _selectedIndex == 1 ? Colors.black : Colors.white)),
+          ),
+          ChoiceChip(
+            onSelected: (bool value){
+              if(value){
+                setState(() {
+                  _selectedIndex = 2;
+                });
+              }
+              else{
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              }
+            },
+            selectedColor: Color.fromRGBO(229, 252, 246, 1),
+            selected: _selectedIndex == 2,
+            label: Text("Planned", style: GoogleFonts.montserrat(
+                color: _selectedIndex == 2 ? Colors.black : Colors.white)),
+          ),
+        ],
+      );
+    }
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: 5,
+      runSpacing: 5,
+      children: [
+        ChoiceChip(
+          onSelected: (bool value){
+            if(value){
+              setState(() {
+                _selectedIndex = 0;
+              });
+            }
+            else{
+              setState(() {
+                _selectedIndex = 0;
+              });
+            }
+          },
+          selectedColor: Color.fromRGBO(229, 252, 246, 1),
+          selected: _selectedIndex == 0,
+          label: Text("Tasks", style: GoogleFonts.montserrat(
+              color: Colors.black),),
+        ),
+        ChoiceChip(
+          onSelected: (bool value){
+            if(value){
+              setState(() {
+                _selectedIndex = 1;
+              });
+            }
+            else{
+              setState(() {
+                _selectedIndex = 0;
+              });
+            }
+          },
+          selectedColor: Color.fromRGBO(229, 252, 246, 1),
+          selected: _selectedIndex == 1,
+          label: Text("Pending", style: GoogleFonts.montserrat(
+              color: Colors.black)),
+        ),
+        ChoiceChip(
+          onSelected: (bool value){
+            if(value){
+              setState(() {
+                _selectedIndex = 2;
+              });
+            }
+            else{
+              setState(() {
+                _selectedIndex = 0;
+              });
+            }
+          },
+          selectedColor: Color.fromRGBO(229, 252, 246, 1),
+          selected: _selectedIndex == 2,
+          label: Text("Planned", style: GoogleFonts.montserrat(
+              color: Colors.black)),
+        ),
+      ],
     );
   }
 }

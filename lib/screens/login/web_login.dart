@@ -25,7 +25,7 @@ class _WebLoginState extends State<WebLogin> {
                     child: Image.asset("assets/homess_google-pixel4-clearlywhite-portrait.png"),
                   ),
                   Link(
-                    uri: Uri.parse("$appUrl"),
+                    uri: Uri.parse(""),
                     target: LinkTarget.blank,
                     builder: (context, onLinkPressed){
                       return MouseRegion(

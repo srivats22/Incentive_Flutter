@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:incentive_flutter/widgets/custom_input.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class AddEditTask extends StatefulWidget {
   final String screenName, userUid, docId, taskName, taskDesc, taskReward;
   final int priority;
-  final bool isAdding, isPlanned;
+  final bool isAdding, isEditing, isPlanned;
   const AddEditTask(
       this.screenName,
       this.userUid,
@@ -16,6 +17,7 @@ class AddEditTask extends StatefulWidget {
       this.taskReward,
       this.priority,
       this.isAdding,
+      this.isEditing,
       this.isPlanned);
 
   @override
@@ -53,7 +55,7 @@ class _AddEditTaskState extends State<AddEditTask> {
       taskDesc = new TextEditingController();
       taskReward = new TextEditingController();
     }
-    btnEnabled = !widget.isAdding;
+    btnEnabled = widget.isAdding || widget.isEditing;
     initialization();
   }
 
@@ -83,64 +85,16 @@ class _AddEditTaskState extends State<AddEditTask> {
               children: [
                 SizedBox(
                   width: screenWidth * .75,
-                  child: UniversalPlatform.isIOS
-                      ? CupertinoTextField(
-                          controller: taskName,
-                          placeholder: "Task Name",
-                        )
-                      : TextFormField(
-                          controller: taskName,
-                          validator: (input) {
-                            if (input!.isEmpty) {
-                              return "Task Name is required";
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            labelText: "Task Name",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          textCapitalization: TextCapitalization.sentences,
-                          autocorrect: true,
-                        ),
+                  child: CustomInput(taskName!, "Task Name", "", "", false,
+                      TextInputType.text, false, false),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: UniversalPlatform.isIOS
-                      ? CupertinoTextField(
-                          controller: taskDesc,
-                          placeholder: "Task Description",
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLength: 256,
-                          keyboardType: TextInputType.multiline,
-                        )
-                      : TextFormField(
-                          controller: taskDesc,
-                          validator: (input) {
-                            if (input!.isEmpty) {
-                              return "Task Description is required";
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            labelText: "Task Description",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLength: 256,
-                          keyboardType: TextInputType.multiline,
-                          textCapitalization: TextCapitalization.sentences,
-                          autocorrect: true,
-                        ),
+                  child: CustomInput(taskDesc!, "Task Description", "", "", false,
+                      TextInputType.text, false, true),
                 ),
                 Visibility(
                   visible: UniversalPlatform.isIOS,
@@ -151,30 +105,8 @@ class _AddEditTaskState extends State<AddEditTask> {
                 ),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: UniversalPlatform.isIOS
-                      ? CupertinoTextField(
-                          controller: taskReward,
-                          placeholder: "Task Reward",
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLength: 256,
-                          keyboardType: TextInputType.multiline,
-                        )
-                      : TextFormField(
-                          controller: taskReward,
-                          decoration: InputDecoration(
-                            labelText: "Task Reward",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          minLines: 1,
-                          maxLines: 5,
-                          maxLength: 256,
-                          keyboardType: TextInputType.multiline,
-                          textCapitalization: TextCapitalization.sentences,
-                          autocorrect: true,
-                        ),
+                  child: CustomInput(taskReward!, "Task Reward", "", "", false,
+                      TextInputType.text, false, true),
                 ),
                 Visibility(
                   visible: UniversalPlatform.isIOS,
@@ -282,10 +214,11 @@ class _AddEditTaskState extends State<AddEditTask> {
                         },
                         child: Text("Cancel"),
                       ),
-                      CupertinoButton.filled(
+                      CupertinoButton(
                         onPressed: () {
                           submitForm();
                         },
+                        color: Color.fromRGBO(0, 128, 128, 1),
                         child:
                             widget.isAdding ? Text("Add Task") : Text("Save"),
                       ),
