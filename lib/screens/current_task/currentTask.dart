@@ -75,7 +75,8 @@ class _CurrentTaskState extends State<CurrentTask> {
           backgroundColor: Color.fromRGBO(229, 252, 246, 1),
           onPressed: (){
             Navigator.push(context, PageTransition(child:
-            AddEditTask("Add Task", user!.uid, "", "", "", "", 0, true, false),
+            AddEditTask("Add Task", user!.uid, "", "", "", "", 0, true, false,
+                false),
             type: PageTransitionType.bottomToTop));
           },
           label: Text("Add Task", style: TextStyle(color: Colors.black),),

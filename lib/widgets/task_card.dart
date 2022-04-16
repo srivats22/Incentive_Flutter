@@ -83,7 +83,7 @@ class _TaskCardState extends State<TaskCard> {
   Widget content(BuildContext context){
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
     TextStyle? _title =
-    Theme.of(context).textTheme.headline3?.copyWith(color: Colors.black);
+    Theme.of(context).textTheme.headline6?.copyWith(color: Colors.black);
     TextStyle? _body =
     Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black);
     TextStyle? _subtitle =
@@ -136,8 +136,11 @@ class _TaskCardState extends State<TaskCard> {
                         Navigator.of(context).pop();
                         Navigator.of(context).push(new MaterialPageRoute(
                             builder: (context) =>
-                                AddEditTask("Edit task", widget.userUid, widget.docId, widget.taskName, widget.taskDesc,
-                                    widget.taskReward, widget.priority, false, false)));
+                                AddEditTask("Edit task", widget.userUid,
+                                    widget.docId, widget.taskName,
+                                    widget.taskDesc,
+                                    widget.taskReward, widget.priority,
+                                    false, true, false)));
                       },
                       icon: Icon(Icons.edit),
                       color: isDarkModeOn ? Colors.white : Colors.black,

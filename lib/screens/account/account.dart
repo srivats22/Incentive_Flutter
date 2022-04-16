@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../common.dart';
 import 'package:incentive_flutter/screens/login/login.dart';
 
@@ -50,9 +51,7 @@ class _AccountState extends State<Account> {
             || UniversalPlatform.isIOS?
         AppBar(
           elevation: 0,
-          title: const Text('Account', style: TextStyle(color: Colors.black),),
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
+          title: const Text('Account',),
         ) : null,
         body: SingleChildScrollView(
           padding: EdgeInsets.all(10),
@@ -113,16 +112,14 @@ class _AccountState extends State<Account> {
               SizedBox(height: 5,),
               Text("App Related", style: TextStyle(fontWeight: FontWeight.bold,
                   color: Colors.teal)),
-              Link(
-                uri: Uri.parse("$privacyLink"),
-                target: LinkTarget.blank,
-                builder: (context, onLinkPressed){
-                  return ListTile(
-                    onTap: onLinkPressed,
-                    leading: Icon(Icons.privacy_tip),
-                    title: Text("Privacy"),
-                  );
+              ListTile(
+                onTap: (){
+                  if(canLaunch("$privacyLink") != null){
+                    launch("$privacyLink");
+                  }
                 },
+                leading: Icon(Icons.privacy_tip),
+                title: Text("Privacy"),
               ),
               ListTile(
                 onTap: (){
@@ -152,42 +149,105 @@ class _AccountState extends State<Account> {
               Text("General", style: TextStyle(fontWeight: FontWeight.bold,
                   color: Colors.teal)),
               Visibility(
-                visible: isWebMobile || UniversalPlatform.isAndroid,
-                child: Link(
-                  uri: Uri.parse("$appUrl"),
-                  target: LinkTarget.blank,
-                  builder: (context, onLinkPressed){
-                    return ListTile(
-                      onTap: onLinkPressed,
-                      leading: Icon(Icons.star),
-                      title: Text("Rate App"),
-                    );
-                  },
-                ),
-              ),
-              Visibility(
-                visible: isWebMobile || UniversalPlatform.isAndroid,
+                visible: UniversalPlatform.isIOS || UniversalPlatform.isAndroid,
                 child: ListTile(
                   onTap: (){
-                    Share.share(
-                        '''
-                      Checkout Incentive: $appUrl
-                      ''',
-                    );
+                    if(UniversalPlatform.isIOS){
+                      if(canLaunch("$iosUrl") != null){
+                        launch("$iosUrl");
+                      }
+                    }
+                    if(UniversalPlatform.isAndroid){
+                      if(canLaunch("$androidUrl") != null){
+                        launch("$androidUrl");
+                      }
+                    }
                   },
-                  leading: Icon(Icons.share),
-                  title: Text("Share"),
+                  leading: UniversalPlatform.isIOS ?
+                  Icon(CupertinoIcons.star_fill) : Icon(Icons.star),
+                  title: Text("Rate App"),
                 ),
               ),
-              Link(
-                uri: Uri.parse("mailto:srivats.venkataraman@gmail.com"),
-                builder: (context, onLinkPressed){
-                  return ListTile(
-                    onTap: onLinkPressed,
-                    leading: Icon(Icons.email),
-                    title: Text("Contact Developer"),
-                  );
-                }
+              ListTile(
+                onTap: (){
+                  if(UniversalPlatform.isIOS){
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) => CupertinoActionSheet(
+                          title: Text("What link do you want to share?"),
+                          actions: [
+                            CupertinoActionSheetAction(
+                              child: const Text('Android Link'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Share.share("${androidUrl}");
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: const Text('iOS Link'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Share.share("${iosUrl}");
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: const Text('Web Link'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Share.share("${website}");
+                              },
+                            ),
+                          ],
+                        ),
+                    );
+                  }
+                  else{
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context){
+                          return Container(
+                            height: MediaQuery.of(context).size.height * .30,
+                            child: ListView(
+                              children: [
+                                ListTile(
+                                  onTap: (){
+                                    Navigator.of(context).pop();
+                                    Share.share("$androidUrl");
+                                  },
+                                  title: Text("Android Link"),
+                                ),
+                                ListTile(
+                                  onTap: (){
+                                    Navigator.of(context).pop();
+                                    Share.share("$iosUrl");
+                                  },
+                                  title: Text("iOS Link"),
+                                ),
+                                ListTile(
+                                  onTap: (){
+                                    Navigator.of(context).pop();
+                                    Share.share("$website");
+                                  },
+                                  title: Text("Web Link"),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                    );
+                  }
+                },
+                leading: Icon(Icons.share),
+                title: Text("Share"),
+              ),
+              ListTile(
+                onTap: (){
+                  if(canLaunch("mailto:srivats.venkataraman@gmail.com") != null){
+                    launch("mailto:srivats.venkataraman@gmail.com");
+                  }
+                },
+                leading: Icon(Icons.email),
+                title: Text("Contact Developer"),
               ),
               Divider(
                 indent: 20,

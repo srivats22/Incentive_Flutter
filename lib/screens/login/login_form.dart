@@ -137,35 +137,8 @@ class _LoginFormState extends State<LoginForm> {
             Text("Complete the form below to get a link to change your password",
             style: TextStyle(fontSize: 18),),
             SizedBox(height: 10,),
-            Visibility(
-              visible: UniversalPlatform.isIOS,
-              child: CupertinoTextField(
-                controller: forgotPwdEmail,
-                placeholder: "Email",
-                keyboardType: TextInputType.emailAddress,
-                restorationId: 'Email',
-                autocorrect: false,
-                autofillHints: [AutofillHints.email],
-              ),
-            ),
-            Visibility(
-              visible: !UniversalPlatform.isIOS,
-              child: TextFormField(
-                controller: forgotPwdEmail,
-                decoration: InputDecoration(
-                  labelText: 'Registered Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (input){
-                  if(input!.isEmpty){
-                    return 'Email is required';
-                  }
-                  return null;
-                },
-              ),
-            ),
+            CustomInput(email!, "Email", "", "", false,
+                TextInputType.emailAddress, false, false),
             SizedBox(height: 10,),
             Visibility(
               visible: UniversalPlatform.isIOS,

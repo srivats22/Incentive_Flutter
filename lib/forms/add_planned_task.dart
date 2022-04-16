@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:universal_platform/universal_platform.dart';
 
+import '../widgets/custom_input.dart';
+
 class AddPlannedTask extends StatefulWidget {
   final String userUid;
   const AddPlannedTask(this.userUid);
@@ -31,9 +33,7 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
-          title: Text("Planned Task", style: TextStyle(color: Colors.black),),
-          iconTheme: IconThemeData(color: Colors.black),
+          title: Text("Planned Task",),
         ),
         body: Form(
           key: plannedKey,
@@ -52,12 +52,14 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
                 SizedBox(height: 5,),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: taskNameInput(),
+                  child: CustomInput(taskName!, "Task Name", "", "", false,
+                    TextInputType.text, false, false),
                 ),
                 SizedBox(height: 10,),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: taskDescriptionInput(),
+                  child: CustomInput(taskDesc!, "Task Description", "", "", false,
+                      TextInputType.text, false, false),
                 ),
                 SizedBox(height: 5,),
                 btnBar(),
@@ -66,68 +68,6 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget taskNameInput(){
-    if(UniversalPlatform.isIOS){
-      return CupertinoTextField(
-        controller: taskName,
-        placeholder: "Task Name",
-        textCapitalization: TextCapitalization.sentences,
-      );
-    }
-    return TextFormField(
-      controller: taskName,
-      validator: (input){
-        if(input!.isEmpty){
-          return "Task Name is required";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Task Name",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      textCapitalization: TextCapitalization.sentences,
-      autocorrect: true,
-    );
-  }
-
-  Widget taskDescriptionInput(){
-    if(UniversalPlatform.isIOS){
-      return CupertinoTextField(
-        controller: taskDesc,
-        placeholder: "Task description",
-        minLines: 1,
-        maxLines: 5,
-        maxLength: 256,
-        textCapitalization: TextCapitalization.sentences,
-        keyboardType: TextInputType.multiline,
-      );
-    }
-    return TextFormField(
-      controller: taskDesc,
-      validator: (input){
-        if(input!.isEmpty){
-          return "Task Description is required";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Task Description",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      minLines: 1,
-      maxLines: 5,
-      maxLength: 256,
-      keyboardType: TextInputType.multiline,
-      textCapitalization: TextCapitalization.sentences,
-      autocorrect: true,
     );
   }
 
@@ -142,11 +82,12 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
             },
             child: Text("Cancel"),
           ),
-          CupertinoButton.filled(
+          CupertinoButton(
             onPressed: (){
               submitForm();
             },
             child: Text("Save"),
+            color: Color.fromRGBO(0, 128, 128, 1),
           ),
         ],
       );
