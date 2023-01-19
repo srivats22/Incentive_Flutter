@@ -54,15 +54,6 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
           title: Text("Convert Task",),
         ),
         body: Form(
-          key: convertKey,
-          onChanged: () {
-            if (convertKey.currentState!.validate()) {
-              setState(() {
-                btnEnabled = true;
-              });
-            }
-          },
-          autovalidateMode: AutovalidateMode.always,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 10),
             child: Column(
@@ -185,6 +176,12 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
   }
 
   Widget btnBar(){
+    final errorSnackBar = SnackBar(
+      content: Text("Fields are empty",
+        style: Theme.of(context).textTheme.caption
+            ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+      backgroundColor: Colors.red,
+    );
     if(UniversalPlatform.isIOS){
       return ButtonBar(
         alignment: MainAxisAlignment.center,
@@ -197,7 +194,13 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
           ),
           CupertinoButton.filled(
             onPressed: () {
-              submitForm();
+              if(widget.taskName.isEmpty
+              || widget.taskDesc.isEmpty){
+                ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+              }
+              else{
+                submitForm();
+              }
             },
             child: Text("Save"),
           ),
@@ -214,11 +217,15 @@ class _ConvertPlannedTaskState extends State<ConvertPlannedTask> {
           child: Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: btnEnabled
-              ? () {
-            submitForm();
-          }
-              : null,
+          onPressed: () {
+            if(widget.taskName.isEmpty
+                || widget.taskDesc.isEmpty){
+              ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+            }
+            else{
+              submitForm();
+            }
+          },
           child: Text("Save"),
         ),
       ],

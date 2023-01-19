@@ -44,17 +44,6 @@ class _RegisterState extends State<Register> {
         ) : Center(
           child: Form(
             key: registerKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: (){
-              if(registerKey.currentState!.validate()){
-                setState(() {
-                  isBtnEnabled = true;
-                });
-              }
-              else{
-                isBtnEnabled = false;
-              }
-            },
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -98,27 +87,47 @@ class _RegisterState extends State<Register> {
   }
 
   Widget btn(){
+    final errorSnackBar = SnackBar(
+      content: Text("Fields are empty",
+        style: Theme.of(context).textTheme.caption
+            ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+      backgroundColor: Colors.red,
+    );
     if(UniversalPlatform.isIOS){
       return CupertinoButton(
         onPressed: (){
-          fAnalytics.logSignUp(signUpMethod: "Email & password");
-          setState(() {
-            isLoading = true;
-          });
-          registerFunction();
+          if(name!.text.isEmpty
+              || email!.text.isEmpty ||
+              pwd!.text.isEmpty){
+            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+          }
+          else{
+            fAnalytics.logSignUp(signUpMethod: "Email & password");
+            setState(() {
+              isLoading = true;
+            });
+            registerFunction();
+          }
         },
         child: Text("Register"),
         color: Color.fromRGBO(0, 128, 128, 1),
       );
     }
     return ElevatedButton(
-      onPressed: isBtnEnabled ? (){
-        fAnalytics.logSignUp(signUpMethod: "Email & password");
-        setState(() {
-          isLoading = true;
-        });
-        registerFunction();
-      } : null,
+      onPressed:(){
+        if(name!.text.isEmpty
+        || email!.text.isEmpty ||
+        pwd!.text.isEmpty){
+          ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+        }
+        else{
+          fAnalytics.logSignUp(signUpMethod: "Email & password");
+          setState(() {
+            isLoading = true;
+          });
+          registerFunction();
+        }
+      },
       child: Text("Register"),
     );
   }
@@ -142,6 +151,7 @@ class _RegisterState extends State<Register> {
       });
 
       Navigator.of(context).popUntil((route) => route.isFirst);
+      // Navigator.of(context).pushReplacementNamed("/home");
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => Navigation())
       );

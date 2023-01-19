@@ -41,6 +41,9 @@ class _PlannedState extends State<Planned> {
     Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Planned Tasks"),
+        ),
         body: StreamBuilder(
           stream: fStore
               .collection("users")

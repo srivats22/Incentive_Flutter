@@ -51,6 +51,7 @@ var lightTheme = ThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
+        onPrimary: Colors.white,
         elevation: 8.0),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -152,6 +153,7 @@ var darkTheme = ThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
+        onPrimary: Colors.white,
         elevation: 8.0),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(

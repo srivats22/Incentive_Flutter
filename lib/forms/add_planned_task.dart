@@ -17,6 +17,8 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
   TextEditingController? taskName, taskDesc;
   final GlobalKey<FormState> plannedKey = new GlobalKey<FormState>();
   bool btnEnabled = false;
+  bool isError = false;
+  String errorMsg = "Fields cannot be empty";
 
   @override
   void initState() {
@@ -37,14 +39,6 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
         ),
         body: Form(
           key: plannedKey,
-          onChanged: (){
-            if(plannedKey.currentState!.validate()){
-              setState(() {
-                btnEnabled = true;
-              });
-            }
-          },
-          autovalidateMode: AutovalidateMode.always,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 10),
             child: Column(
@@ -62,6 +56,13 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
                       TextInputType.text, false, false),
                 ),
                 SizedBox(height: 5,),
+                Visibility(
+                  visible: isError,
+                  child: Text(errorMsg,
+                    style: Theme.of(context).textTheme.subtitle1
+                        ?.copyWith(color: Colors.red),),
+                ),
+                SizedBox(height: 5,),
                 btnBar(),
               ],
             ),
@@ -72,6 +73,12 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
   }
 
   Widget btnBar(){
+    final errorSnackBar = SnackBar(
+      content: Text("Fields are empty",
+        style: Theme.of(context).textTheme.caption
+            ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+      backgroundColor: Colors.red,
+    );
     if(UniversalPlatform.isIOS){
       return ButtonBar(
         alignment: MainAxisAlignment.center,
@@ -84,7 +91,14 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
           ),
           CupertinoButton(
             onPressed: (){
-              submitForm();
+              if(taskName!.text.isEmpty || taskDesc!.text.isEmpty){
+                setState(() {
+                  isError = true;
+                });
+              }
+              else{
+                submitForm();
+              }
             },
             child: Text("Save"),
             color: Color.fromRGBO(0, 128, 128, 1),
@@ -102,9 +116,20 @@ class _AddPlannedTaskState extends State<AddPlannedTask> {
           child: Text("Cancel"),
         ),
         ElevatedButton(
-          onPressed: btnEnabled ? (){
-            submitForm();
-          } : null,
+          onPressed: (){
+            if(taskName!.text.isEmpty || taskDesc!.text.isEmpty){
+              ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+              // setState(() {
+              //   isError = true;
+              // });
+              // Future.delayed(Duration(seconds: 5), (){
+              //   print("Wait for 10 seconds");
+              // });
+            }
+            else{
+              submitForm();
+            }
+          },
           child: Text("Save"),
         ),
       ],

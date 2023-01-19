@@ -35,6 +35,9 @@ class _PendingTaskState extends State<PendingTask> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Pending Tasks"),
+        ),
         body: StreamBuilder(
           stream: fStore
               .collection("users")

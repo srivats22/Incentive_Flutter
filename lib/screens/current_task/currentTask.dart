@@ -6,7 +6,6 @@ import 'package:incentive_flutter/forms/add_edit_task.dart';
 import 'package:incentive_flutter/widgets/empty_placeholder.dart';
 import 'package:incentive_flutter/widgets/task_card.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:intl/intl.dart';
 
 class CurrentTask extends StatefulWidget {
   @override
@@ -18,8 +17,10 @@ class _CurrentTaskState extends State<CurrentTask> {
   User? user;
   DateTime dt = DateTime.now();
   bool isExpanded = true;
+  bool isList = true;
+  bool isLoading = true;
 
-  initialization() {
+  initialization() async {
     user = FirebaseAuth.instance.currentUser;
     var month = dt.month.toString();
     var date = dt.day.toString();
@@ -31,6 +32,7 @@ class _CurrentTaskState extends State<CurrentTask> {
 
   @override
   void initState() {
+    print("Inside initState");
     super.initState();
     initialization();
   }
@@ -39,6 +41,9 @@ class _CurrentTaskState extends State<CurrentTask> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Today's Tasks"),
+        ),
         body: StreamBuilder(
           stream: fStore
                 .collection("users")
@@ -73,14 +78,22 @@ class _CurrentTaskState extends State<CurrentTask> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Color.fromRGBO(229, 252, 246, 1),
-          onPressed: (){
-            Navigator.push(context, PageTransition(child:
-            AddEditTask("Add Task", user!.uid, "", "", "", "", 0, true, false,
-                false),
-            type: PageTransitionType.bottomToTop));
+          onPressed: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    child: AddEditTask("Add Task", user!.uid, "", "", "", "", 0,
+                        true, false, false),
+                    type: PageTransitionType.bottomToTop));
           },
-          label: Text("Add Task", style: TextStyle(color: Colors.black),),
-          icon: Icon(Icons.add, color: Colors.black,),
+          label: Text(
+            "Add Task",
+            style: TextStyle(color: Colors.black),
+          ),
+          icon: Icon(
+            Icons.add,
+            color: Colors.black,
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),

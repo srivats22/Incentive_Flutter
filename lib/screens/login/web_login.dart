@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:incentive_flutter/common.dart';
 import 'package:incentive_flutter/screens/login/login_form.dart';
 import 'package:url_launcher/link.dart';
 

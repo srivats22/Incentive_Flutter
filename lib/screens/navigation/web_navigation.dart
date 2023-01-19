@@ -38,8 +38,9 @@ class _WebNavigationState extends State<WebNavigation> {
                 });
               },
               extended: true,
-              selectedIconTheme: IconThemeData(color: Colors.tealAccent),
-              selectedLabelTextStyle: TextStyle(color: Colors.tealAccent),
+              useIndicator: true,
+              // selectedIconTheme: IconThemeData(color: Colors.tealAccent),
+              // selectedLabelTextStyle: TextStyle(color: Colors.tealAccent),
               destinations: [
                 NavigationRailDestination(
                   selectedIcon: Icon(Icons.task),

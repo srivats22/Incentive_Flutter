@@ -1,14 +1,13 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // firebase related
 FirebaseAuth fAuth = FirebaseAuth.instance;
 FirebaseFirestore fStore = FirebaseFirestore.instance;
-FirebaseAnalytics fAnalytics = FirebaseAnalytics();
+FirebaseAnalytics fAnalytics = FirebaseAnalytics.instance;
 User? currUser = fAuth.currentUser;
 
 TextStyle lightModeTextField = TextStyle(color: Colors.white);
@@ -22,3 +21,5 @@ String iosUrl = "https://apps.apple.com/us/app/incentive-todo-tasks/id1608050669
 String website = "https://todo-incentive.web.app/";
 String privacyLink =
     "https://srivats22.notion.site/srivats22/Incentive-Privacy-Statement-83e236c5e5d84fccbf59cf124fbc7eaa";
+String changeLog = "https://srivats22.notion.site/Change-Log-2b1332a0c6314a0585ee37bb502eb168";
+String requestFeature = "";

@@ -35,6 +35,12 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final errorSnackBar = SnackBar(
+      content: Text("Fields are empty",
+        style: Theme.of(context).textTheme.caption
+            ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+      backgroundColor: Colors.red,
+    );
     return SafeArea(
       child: Scaffold(
         body: isLoading ? Center(
@@ -43,6 +49,7 @@ class _LoginFormState extends State<LoginForm> {
           child: Form(
             key: loginKey,
             child: SingleChildScrollView(
+              primary: true,
               child: Column(
                 children: [
                   Text("Incentive", style: TextStyle(fontWeight: FontWeight.bold),),
@@ -80,11 +87,17 @@ class _LoginFormState extends State<LoginForm> {
                     visible: UniversalPlatform.isIOS,
                     child: CupertinoButton(
                       onPressed: (){
-                        fAnalytics.logLogin();
-                        setState(() {
-                          isLoading = true;
-                        });
-                        loginFunction();
+                        if(email!.text.isEmpty
+                        || pwd!.text.isEmpty){
+                          ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                        }
+                        else{
+                          fAnalytics.logLogin();
+                          setState(() {
+                            isLoading = true;
+                          });
+                          loginFunction();
+                        }
                       },
                       child: Text("Login"),
                       color: Colors.teal,
@@ -94,11 +107,17 @@ class _LoginFormState extends State<LoginForm> {
                     visible: !UniversalPlatform.isIOS,
                     child: ElevatedButton(
                       onPressed: (){
-                        fAnalytics.logLogin();
-                        setState(() {
-                          isLoading = true;
-                        });
-                        loginFunction();
+                        if(email!.text.isEmpty
+                            || pwd!.text.isEmpty){
+                          ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                        }
+                        else{
+                          fAnalytics.logLogin();
+                          setState(() {
+                            isLoading = true;
+                          });
+                          loginFunction();
+                        }
                       },
                       child: Text("Login"),
                     ),
@@ -126,7 +145,7 @@ class _LoginFormState extends State<LoginForm> {
 
   Widget _bottomSheet(){
     return Container(
-      height: MediaQuery.of(context).size.height * .50,
+      height: MediaQuery.of(context).size.height * .90,
       child: SingleChildScrollView(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -137,7 +156,7 @@ class _LoginFormState extends State<LoginForm> {
             Text("Complete the form below to get a link to change your password",
             style: TextStyle(fontSize: 18),),
             SizedBox(height: 10,),
-            CustomInput(email!, "Email", "", "", false,
+            CustomInput(forgotPwdEmail!, "Email", "", "", false,
                 TextInputType.emailAddress, false, false),
             SizedBox(height: 10,),
             Visibility(
@@ -181,6 +200,7 @@ class _LoginFormState extends State<LoginForm> {
       await fAuth.signInWithEmailAndPassword(
           email: email!.text, password: pwd!.text);
       Navigator.of(context).popUntil((route) => route.isFirst);
+      // Navigator.of(context).pushReplacementNamed("/home");
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => Navigation()));
     }

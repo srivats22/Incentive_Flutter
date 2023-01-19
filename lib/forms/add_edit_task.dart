@@ -62,6 +62,12 @@ class _AddEditTaskState extends State<AddEditTask> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
+    final errorSnackBar = SnackBar(
+      content: Text("Fields are empty",
+        style: Theme.of(context).textTheme.caption
+            ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+      backgroundColor: Colors.red,
+    );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -71,14 +77,6 @@ class _AddEditTaskState extends State<AddEditTask> {
         ),
         body: Form(
           key: taskKey,
-          onChanged: () {
-            if (taskKey.currentState!.validate()) {
-              setState(() {
-                btnEnabled = true;
-              });
-            }
-          },
-          autovalidateMode: AutovalidateMode.always,
           child: SingleChildScrollView(
             padding: EdgeInsets.only(top: 10),
             child: Column(
@@ -93,8 +91,8 @@ class _AddEditTaskState extends State<AddEditTask> {
                 ),
                 SizedBox(
                   width: screenWidth * .75,
-                  child: CustomInput(taskDesc!, "Task Description", "", "", false,
-                      TextInputType.text, false, true),
+                  child: CustomInput(taskDesc!, "Task Description", "", "",
+                      false, TextInputType.text, false, true),
                 ),
                 Visibility(
                   visible: UniversalPlatform.isIOS,
@@ -192,11 +190,19 @@ class _AddEditTaskState extends State<AddEditTask> {
                         child: Text("Cancel"),
                       ),
                       ElevatedButton(
-                        onPressed: btnEnabled
-                            ? () {
-                                submitForm();
-                              }
-                            : null,
+                        onPressed: () {
+                          if(widget.isAdding
+                          && taskName!.text.isEmpty && taskDesc!.text.isEmpty){
+                            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                          }
+                          else if(!widget.isAdding
+                          && taskName!.text.isEmpty || taskDesc!.text.isEmpty){
+                            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                          }
+                          else{
+                            submitForm();
+                          }
+                        },
                         child:
                             widget.isAdding ? Text("Add Task") : Text("Save"),
                       ),
@@ -216,7 +222,17 @@ class _AddEditTaskState extends State<AddEditTask> {
                       ),
                       CupertinoButton(
                         onPressed: () {
-                          submitForm();
+                          if(widget.isAdding
+                              && taskName!.text.isEmpty && taskDesc!.text.isEmpty){
+                            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                          }
+                          else if(!widget.isAdding
+                              && taskName!.text.isEmpty || taskDesc!.text.isEmpty){
+                            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                          }
+                          else{
+                            submitForm();
+                          }
                         },
                         color: Color.fromRGBO(0, 128, 128, 1),
                         child:

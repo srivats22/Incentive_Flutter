@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:incentive_flutter/forms/add_edit_task.dart';
@@ -21,13 +18,11 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   bool isConfettiPlaying = false;
-  late ConfettiController _confettiController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _confettiController = ConfettiController(duration: Duration(seconds: 5));
   }
 
   @override
@@ -171,53 +166,7 @@ class _TaskCardState extends State<TaskCard> {
                   visible: UniversalPlatform.isIOS,
                   child: CupertinoButton(
                     onPressed: (){
-                      Navigator.of(context).pop();
-                      _confettiController.play();
-                      fStore
-                          .collection("users")
-                          .doc(widget.userUid)
-                          .collection("tasks")
-                          .doc(widget.docId).delete();
-                      showDialog(
-                          context: context,
-                          builder: (context){
-                            return AlertDialog(
-                              scrollable: true,
-                              alignment: Alignment.center,
-                              content: Container(
-                                alignment: Alignment.bottomCenter,
-                                child: ConfettiWidget(
-                                  confettiController: _confettiController,
-                                  shouldLoop: false,
-                                  blastDirection: -pi / 2,
-                                  numberOfParticles: 5,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          widget.taskReward.toString().trim() != "" ?
-                                          "You can now enjoy your reward which was: "
-                                              : "You just completed a task"
-                                      ),
-                                      Visibility(
-                                        visible: widget.taskReward.toString().trim() != "",
-                                        child: Text("${widget.taskReward}"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: (){
-                                    Navigator.of(context)
-                                        .pop();
-                                  },
-                                  child: Text("Close"),
-                                ),
-                              ],
-                            );
-                          }
-                      );
+                      deleteConfirmation();
                     },
                     child: Text("Delete".toUpperCase(),
                       style: TextStyle(color: Colors.white),),
@@ -228,53 +177,7 @@ class _TaskCardState extends State<TaskCard> {
                   visible: !UniversalPlatform.isIOS,
                   child: ElevatedButton(
                     onPressed: (){
-                      Navigator.of(context).pop();
-                      _confettiController.play();
-                      fStore
-                          .collection("users")
-                          .doc(widget.userUid)
-                          .collection("tasks")
-                          .doc(widget.docId).delete();
-                      showDialog(
-                          context: context,
-                          builder: (context){
-                            return AlertDialog(
-                              scrollable: true,
-                              alignment: Alignment.center,
-                              content: Container(
-                                alignment: Alignment.bottomCenter,
-                                child: ConfettiWidget(
-                                  confettiController: _confettiController,
-                                  shouldLoop: false,
-                                  blastDirection: -pi / 2,
-                                  numberOfParticles: 5,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          widget.taskReward.toString().trim() != "" ?
-                                          "You can now enjoy your reward which was: "
-                                              : "You just completed a task"
-                                      ),
-                                      Visibility(
-                                        visible: widget.taskReward.toString().trim() != "",
-                                        child: Text("${widget.taskReward}"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: (){
-                                    Navigator.of(context)
-                                        .pop();
-                                  },
-                                  child: Text("Close"),
-                                ),
-                              ],
-                            );
-                          }
-                      );
+                      deleteConfirmation();
                     },
                     child: Text("Delete".toUpperCase(),
                       style: TextStyle(color: Colors.white),),
@@ -286,5 +189,72 @@ class _TaskCardState extends State<TaskCard> {
           );
         }
     );
+  }
+
+  void deleteConfirmation(){
+    var _rewardText = widget.taskReward;
+    const snackBar = SnackBar(
+      content: Text('Task Completed'),
+    );
+    // reward is present
+    if(_rewardText.isNotEmpty){
+      Navigator.of(context).pop();
+      fStore
+          .collection("users")
+          .doc(widget.userUid)
+          .collection("tasks")
+          .doc(widget.docId).delete();
+      showDialog(
+          context: context,
+          builder: (context){
+            return AlertDialog(
+              scrollable: true,
+              alignment: Alignment.center,
+              content: Container(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [
+                    Text(
+                        "You can now enjoy your reward which was:"
+                    ),
+                    Text("$_rewardText"),
+                  ],
+                ),
+              ),
+              actions: [
+                Visibility(
+                  visible: !UniversalPlatform.isIOS,
+                  child: OutlinedButton(
+                    onPressed: (){
+                      Navigator.of(context)
+                          .pop();
+                    },
+                    child: Text("Close"),
+                  ),
+                ),
+                Visibility(
+                  visible: UniversalPlatform.isIOS,
+                  child: CupertinoButton(
+                    onPressed: (){
+                      Navigator.of(context)
+                          .pop();
+                    },
+                    child: Text("Close"),
+                  ),
+                ),
+              ],
+            );
+          }
+      );
+    }
+    else{
+      Navigator.of(context).pop();
+      fStore
+          .collection("users")
+          .doc(widget.userUid)
+          .collection("tasks")
+          .doc(widget.docId).delete();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
