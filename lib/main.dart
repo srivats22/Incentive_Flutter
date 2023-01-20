@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_dynamic_theme/easy_dynamic_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:incentive_flutter/common.dart';
+import 'package:incentive_flutter/noti/noti_helper.dart';
 import 'package:incentive_flutter/screens/login/login.dart';
 import 'package:incentive_flutter/screens/navigation/navigation.dart';
 import 'package:incentive_flutter/theme.dart';
@@ -13,6 +15,7 @@ import 'package:url_strategy/url_strategy.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotiHelper().init();
   setPathUrlStrategy();
   runApp(
     EasyDynamicThemeWidget(
@@ -38,17 +41,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     bool isDarkModeOn = Theme.of(context).brightness == Brightness.dark;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Incentive',
-      darkTheme: darkTheme,
-      theme: isDarkModeOn ? darkTheme :
-      lightTheme,
-      themeMode: EasyDynamicTheme.of(context).themeMode,
-      home: startingPage(),
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: fAnalytics)
-      ],
+    return DynamicColorBuilder(
+      builder: (ColorScheme? dayColorScheme, ColorScheme? nightColorScheme){
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Incentive',
+          darkTheme: AppTheme.nightTheme(nightColorScheme),
+          theme: isDarkModeOn ? AppTheme.nightTheme(nightColorScheme) :
+          AppTheme.lightTheme(dayColorScheme),
+          themeMode: EasyDynamicTheme.of(context).themeMode,
+          home: startingPage(),
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: fAnalytics)
+          ],
+        );
+      },
     );
   }
 

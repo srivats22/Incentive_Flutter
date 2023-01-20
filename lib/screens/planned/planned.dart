@@ -183,7 +183,7 @@ class _PlannedState extends State<Planned> {
                     },
                     child: Text("Delete".toUpperCase(),
                       style: TextStyle(color: Colors.white),),
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   ),
                 ),
               ],

@@ -77,7 +77,6 @@ class _CurrentTaskState extends State<CurrentTask> {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Color.fromRGBO(229, 252, 246, 1),
           onPressed: () {
             Navigator.push(
                 context,

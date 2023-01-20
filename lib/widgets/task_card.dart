@@ -30,7 +30,40 @@ class _TaskCardState extends State<TaskCard> {
     if(!widget.isPending && widget.priority == 0){
       return GestureDetector(
         onTap: (){
-          _bottomSheet(context);
+          // _bottomSheet(context);
+          showDialog(
+            context: context,
+            builder: (context){
+              return Dialog(
+                insetPadding: EdgeInsets.zero,
+                child: Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Full-screen dialog title'),
+                    centerTitle: false,
+                    automaticallyImplyLeading: false,
+                    leading: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text("Something"),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          );
         },
         child: Card(
           elevation: 10,
@@ -42,7 +75,7 @@ class _TaskCardState extends State<TaskCard> {
     if(!widget.isPending && widget.priority == 1){
       return GestureDetector(
         onTap: (){
-          _bottomSheet(context);
+          // _bottomSheet(context);
         },
         child: Card(
           elevation: 10,
@@ -181,7 +214,7 @@ class _TaskCardState extends State<TaskCard> {
                     },
                     child: Text("Delete".toUpperCase(),
                       style: TextStyle(color: Colors.white),),
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   ),
                 ),
               ],

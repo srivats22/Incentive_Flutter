@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // firebase related
 FirebaseAuth fAuth = FirebaseAuth.instance;
@@ -14,6 +15,10 @@ TextStyle lightModeTextField = TextStyle(color: Colors.white);
 
 final isWebMobile =
     kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
+
+bool isIos = UniversalPlatform.isIOS;
+bool isAndroid = UniversalPlatform.isAndroid;
+bool isWeb = UniversalPlatform.isWeb;
 
 // links
 String androidUrl = "https://play.google.com/store/apps/details?id=com.srivats.todoincentive";

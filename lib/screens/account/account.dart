@@ -111,7 +111,7 @@ class _AccountState extends State<Account> {
                 color: Colors.teal)),
             ListTile(
               onTap: (){
-                launch("$privacyLink");
+                launchUrl(Uri.parse("$privacyLink"));
               },
               leading: Icon(Icons.privacy_tip),
               title: Text("Privacy"),
@@ -148,10 +148,10 @@ class _AccountState extends State<Account> {
               child: ListTile(
                 onTap: (){
                   if(UniversalPlatform.isIOS){
-                    launch("$iosUrl");
+                    launchUrl(Uri.parse("$iosUrl"));
                   }
                   if(UniversalPlatform.isAndroid){
-                    launch("$androidUrl");
+                    launchUrl(Uri.parse("$androidUrl"));
                   }
                 },
                 leading: UniversalPlatform.isIOS ?
@@ -233,7 +233,7 @@ class _AccountState extends State<Account> {
             ),
             ListTile(
               onTap: (){
-                launch("mailto:srivats.venkataraman@gmail.com");
+                launchUrl(Uri.parse("mailto:srivats.venkataraman@gmail.com"));
               },
               leading: Icon(Icons.email),
               title: Text("Contact Developer"),
