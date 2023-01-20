@@ -71,18 +71,6 @@ class _MobileNavState extends State<MobileNav> {
                     "${user?.displayName}",
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                  // trailing: GestureDetector(
-                  //   onTap: () {
-                  //     Navigator.of(context).push(
-                  //         new MaterialPageRoute(builder: (context) => Account()));
-                  //   },
-                  //   child: ExcludeSemantics(
-                  //     child: CircleAvatar(
-                  //       child: Text("${user?.displayName![0].toUpperCase()}"),
-                  //       radius: 50,
-                  //     ),
-                  //   ),
-                  // ),
                 ),
               ),
             ),
@@ -100,47 +88,10 @@ class _MobileNavState extends State<MobileNav> {
             SizedBox(
               height: 5,
             ),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: OpenContainer(
-            //     closedColor: Colors.transparent,
-            //     openColor: Colors.transparent,
-            //     openBuilder: (context, _) => CurrentTask(),
-            //     closedBuilder: (context, VoidCallback openContainer) => ListTile(
-            //       onTap: openContainer,
-            //       leading: UniversalPlatform.isIOS ?
-            //       Icon(CupertinoIcons.doc_checkmark_fill) : Icon(Icons.task),
-            //       title: Text("Today's Tasks"),
-            //     ),
-            //   ),
-            // ),
             customListTile(Icon(Icons.task), Icon(CupertinoIcons.doc_checkmark),
                 "Today's Tasks", CurrentTask()),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: ListTile(
-            //     onTap: (){
-            //       Navigator.of(context).push(MaterialPageRoute(
-            //           builder: (context) => PendingTask()));
-            //     },
-            //     leading: Icon(Icons.pending_actions),
-            //     title: Text("Pending Tasks"),
-            //   ),
-            // ),
             customListTile(Icon(Icons.pending_actions),
                 Icon(Icons.pending_actions), "Pending Tasks", PendingTask()),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: ListTile(
-            //     onTap: (){
-            //       Navigator.of(context).push(MaterialPageRoute(
-            //           builder: (context) => Planned()));
-            //     },
-            //     leading: UniversalPlatform.isIOS ?
-            //     Icon(CupertinoIcons.calendar_today) : Icon(Icons.calendar_month),
-            //     title: Text("Planned Tasks"),
-            //   ),
-            // ),
             customListTile(
                 Icon(Icons.calendar_month),
                 Icon(CupertinoIcons.calendar_today),
@@ -154,20 +105,6 @@ class _MobileNavState extends State<MobileNav> {
               padding: EdgeInsets.only(left: 20),
               child: Text("Others"),
             ),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: ListTile(
-            //     onTap: (){
-            //       Navigator.of(context).push(MaterialPageRoute(
-            //           builder: (context) =>
-            //               AddEditTask("Add Task", "${user!.uid}", "", "", "",
-            //                   "", 0, true, false, false)));
-            //     },
-            //     leading: UniversalPlatform.isIOS ?
-            //     Icon(CupertinoIcons.add) : Icon(Icons.add),
-            //     title: Text("Create Task"),
-            //   ),
-            // ),
             customListTile(
               Icon(Icons.add),
               Icon(CupertinoIcons.add),
@@ -175,38 +112,12 @@ class _MobileNavState extends State<MobileNav> {
               AddEditTask("Add Task", "${user!.uid}", "", "", "", "", 0, true,
                   false, false),
             ),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: ListTile(
-            //     onTap: () {
-            //       Navigator.of(context).push(MaterialPageRoute(
-            //           builder: (context) => AddPlannedTask("${user!.uid}")));
-            //     },
-            //     leading: UniversalPlatform.isIOS
-            //         ? Icon(CupertinoIcons.calendar)
-            //         : Icon(Icons.calendar_month),
-            //     title: Text("Plan Task"),
-            //   ),
-            // ),
             customListTile(
               Icon(Icons.calendar_month),
               Icon(CupertinoIcons.calendar),
               "Plan Task",
               AddPlannedTask("${user!.uid}"),
             ),
-            // Padding(
-            //   padding: EdgeInsets.all(5),
-            //   child: ListTile(
-            //     onTap: () {
-            //       Navigator.of(context).push(MaterialPageRoute(
-            //           builder: (context) => AddPlannedTask("${user!.uid}")));
-            //     },
-            //     leading: UniversalPlatform.isIOS
-            //         ? Icon(CupertinoIcons.calendar)
-            //         : Icon(Icons.calendar_month),
-            //     title: Text("Plan Task"),
-            //   ),
-            // ),
             customListTile(
                 ExcludeSemantics(
                   child: CircleAvatar(
